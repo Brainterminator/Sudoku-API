@@ -13,7 +13,8 @@ public class BeispielLader extends SudokuLader {
      * @return Sudoku
      */
     @Override
-    public void ladeSudoku(Sudoku sudoku) {
+    public void ladeSudoku(Sudoku sudoku){
+        sudoku.reset();
         try {
             sudoku.setFixedValue(1, 2, 3);
             sudoku.setFixedValue(2, 4, 1);
@@ -38,7 +39,7 @@ public class BeispielLader extends SudokuLader {
             sudoku.setZustand(SudokuZustand.GELADEN);
         } catch (WertInQuadrantVorhandenException | FeldBelegtException | WertebereichUngueltigException |
                  WertInZeileVorhandenException | WertInSpalteVorhandenException e) {
-            throw new RuntimeException(e);
+            sudoku.reset();
         }
     }
 }

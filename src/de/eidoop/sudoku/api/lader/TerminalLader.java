@@ -14,6 +14,7 @@ public class TerminalLader extends SudokuLader {
      */
     @Override
     public void ladeSudoku(Sudoku sudoku) {
+            sudoku.reset();
             Scanner scanner = new Scanner(System.in);
             String[] input = new String[9];
             System.out.println("Geben sie ein Sudoku ein:");

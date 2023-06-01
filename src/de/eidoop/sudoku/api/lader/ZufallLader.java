@@ -20,6 +20,7 @@ public class ZufallLader extends SudokuLader {
      */
     @Override
     public void ladeSudoku(Sudoku sudoku) {
+        sudoku.reset();
         int i = 0;
         if(zuBelegen>32){
             zuBelegen=32;

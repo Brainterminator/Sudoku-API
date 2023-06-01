@@ -32,10 +32,10 @@ public class Field {
     /**
      * @param value int
      * @return bool depending on success
-     * @throws FieldFixedException for fixed fields
-     * @throws ValueOutOfRangeException for forbidden coordinates
-     * @throws RowOccupiedException if the row is occupied
-     * @throws ColumnOccupiedException if the column is occupied
+     * @throws FieldFixedException       for fixed fields
+     * @throws ValueOutOfRangeException  for forbidden coordinates
+     * @throws RowOccupiedException      if the row is occupied
+     * @throws ColumnOccupiedException   if the column is occupied
      * @throws QuadrantOccupiedException if the quadrant is occupied
      */
     public boolean setValue(int value) throws FieldFixedException, ValueOutOfRangeException, RowOccupiedException, ColumnOccupiedException, QuadrantOccupiedException {

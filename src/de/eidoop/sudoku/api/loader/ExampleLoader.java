@@ -8,10 +8,11 @@ public class ExampleLoader extends SudokuLoader {
 
     /**
      * Loads the default example Sudoku
+     *
      * @param sudoku Sudoku
      */
     @Override
-    public void loadSudoku(Sudoku sudoku){
+    public void loadSudoku(Sudoku sudoku) {
         sudoku.reset();
         try {
             sudoku.setFixedValue(1, 2, 3);

@@ -7,7 +7,7 @@ public class FieldGroup {
     private int nr;
     private final Field[] fields;
 
-    public FieldGroup(){
+    public FieldGroup() {
         fields = new Field[9];
     }
 
@@ -27,16 +27,17 @@ public class FieldGroup {
     }
 
     public void setField(int index, Field field) {
-        if(index >= 0 && index < 9)
+        if (index >= 0 && index < 9)
             fields[index] = field;
     }
 
     /**
      * Checks if any of the Field Groups of this Field are occupied
+     *
      * @param value int
      * @return boolean
      */
-    public boolean isOccupied(int value){
+    public boolean isOccupied(int value) {
         for (Field field : fields) {
             if (field.getValue() == value)
                 return true;

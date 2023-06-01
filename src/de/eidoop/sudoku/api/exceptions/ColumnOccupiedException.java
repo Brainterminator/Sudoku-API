@@ -1,4 +1,4 @@
 package de.eidoop.sudoku.api.exceptions;
 
-public class ColumnOccupiedException extends Exception{
+public class ColumnOccupiedException extends Exception {
 }

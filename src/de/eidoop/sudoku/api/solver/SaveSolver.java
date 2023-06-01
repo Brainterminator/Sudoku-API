@@ -10,9 +10,9 @@ public class SaveSolver extends Solver {
 
     private final Sudoku sudoku;
 
-    public SaveSolver(Sudoku sudoku){
+    public SaveSolver(Sudoku sudoku) {
         super(sudoku);
-        this.sudoku= sudoku;
+        this.sudoku = sudoku;
     }
 
     /**
@@ -34,7 +34,7 @@ public class SaveSolver extends Solver {
     }
 
     private void solveRecursive(int row, int column) {
-        ArrayList<Integer> values = sudoku.getField(column,row).getPossibleValues();
+        ArrayList<Integer> values = sudoku.getField(column, row).getPossibleValues();
         if (values.size() != 1)
             return;
 

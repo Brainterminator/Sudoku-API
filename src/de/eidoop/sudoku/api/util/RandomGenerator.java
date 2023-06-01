@@ -6,6 +6,7 @@ public class RandomGenerator {
 
     /**
      * Returns a random number between 1 and 9
+     *
      * @return int
      */
     public static int randInt() {

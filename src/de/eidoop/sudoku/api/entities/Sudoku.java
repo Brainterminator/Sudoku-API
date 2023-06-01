@@ -51,9 +51,9 @@ public class Sudoku {
     /**
      * Sets a value
      *
-     * @param row int
+     * @param row    int
      * @param column int
-     * @param value int
+     * @param value  int
      * @throws FieldFixedException            for fixed fields
      * @throws ValueOutOfRangeException       for forbidden coordinates
      * @throws RowOccupiedException           if the row is occupied
@@ -77,9 +77,9 @@ public class Sudoku {
     /**
      * Sets a fixed value
      *
-     * @param row int
+     * @param row    int
      * @param column int
-     * @param value int
+     * @param value  int
      * @throws FieldFixedException            for fixed fields
      * @throws ValueOutOfRangeException       for forbidden coordinates
      * @throws RowOccupiedException           if the row is occupied

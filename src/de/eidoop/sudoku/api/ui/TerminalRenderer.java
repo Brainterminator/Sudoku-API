@@ -5,7 +5,7 @@ import de.eidoop.sudoku.api.solver.Solver;
 
 @Deprecated(since = "1.1", forRemoval = true)
 public class TerminalRenderer implements ISudokuRenderer {
-    public void print(Sudoku sudoku){
+    public void print(Sudoku sudoku) {
         for (int y = 0; y < Solver.length; y++) {
             if (y % 3 == 0)
                 printLine();
@@ -14,7 +14,7 @@ public class TerminalRenderer implements ISudokuRenderer {
                 if (x % 3 == 0)
                     System.out.print("| ");
 
-                int value = sudoku.getField(x,y).getValue();
+                int value = sudoku.getField(x, y).getValue();
                 if (value == 0)
                     System.out.print("  ");
                 else
@@ -25,7 +25,7 @@ public class TerminalRenderer implements ISudokuRenderer {
         printLine();
     }
 
-    private static void printLine(){
+    private static void printLine() {
         System.out.print("+ - - - + - - - + - - - +\n");
     }
 }

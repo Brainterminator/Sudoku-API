@@ -6,6 +6,7 @@ import de.eidoop.sudoku.api.enums.SudokuState;
 public class BruteForceSolver extends Solver {
 
     private final Sudoku sudoku;
+
     public BruteForceSolver(Sudoku sudoku) {
         super(sudoku);
         this.sudoku = sudoku;
@@ -22,9 +23,9 @@ public class BruteForceSolver extends Solver {
                 sudoku.forceValue(y + 1, x + 1, 0);
             }
         }
-        if(solveRecursive(0, sudoku)){
+        if (solveRecursive(0, sudoku)) {
             sudoku.setState(SudokuState.SOLVED);
-        }  else sudoku.setState(SudokuState.UNSOLVABLE);
+        } else sudoku.setState(SudokuState.UNSOLVABLE);
     }
 
     private boolean solveRecursive(int fieldPos, Sudoku sudoku) {
@@ -34,7 +35,7 @@ public class BruteForceSolver extends Solver {
         int row = fieldPos / 9;
         int column = fieldPos % 9;
 
-        if (sudoku.getField(column,row).getIsFixed())
+        if (sudoku.getField(column, row).getIsFixed())
             return solveRecursive(fieldPos + 1, sudoku);
 
         boolean isValueValid = false;

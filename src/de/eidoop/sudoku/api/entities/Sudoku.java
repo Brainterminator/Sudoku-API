@@ -1,168 +1,138 @@
 package de.eidoop.sudoku.api.entities;
 
-import de.eidoop.sudoku.api.enums.SudokuZustand;
+import de.eidoop.sudoku.api.enums.SudokuState;
 import de.eidoop.sudoku.api.exceptions.*;
-import de.eidoop.sudoku.api.ui.ISudokuAnzeige;
-import de.eidoop.sudoku.api.ui.TerminalAnzeige;
 
-/**
- * Diese Klasse repräsentiert ein gesamtes Sudoku Spielfeld
- */
 public class Sudoku {
 
-    protected SudokuZustand zustand = SudokuZustand.LEER;
-    protected Feldgruppe[] quadranten = new Feldgruppe[9];
-    protected Feldgruppe[] zeilen = new Feldgruppe[9];
-    protected Feldgruppe[] spalten = new Feldgruppe[9];
+    protected SudokuState state = SudokuState.EMPTY;
+    protected FieldGroup[] quadrants = new FieldGroup[9];
+    protected FieldGroup[] rows = new FieldGroup[9];
+    protected FieldGroup[] columns = new FieldGroup[9];
 
-    /**
-     * Standard Konstruktor, initialisiert das Feld
-     */
     public Sudoku() {
         for (int i = 0; i < 9; i++) {
-            zeilen[i] = new Feldgruppe();
-            zeilen[i].setNr(i);
-            spalten[i] = new Feldgruppe();
-            spalten[i].setNr(i);
-            quadranten[i] = new Feldgruppe();
-            quadranten[i].setNr(i);
+            rows[i] = new FieldGroup();
+            rows[i].setNr(i);
+            columns[i] = new FieldGroup();
+            columns[i].setNr(i);
+            quadrants[i] = new FieldGroup();
+            quadrants[i].setNr(i);
         }
 
         for (int y = 0; y < 9; y++) {
             for (int x = 0; x < 9; x++) {
-                Feldgruppe quadrant = getQuadrant(y, x);
-                int quadrantenPos = ((y % 3) * 3) + (x % 3);
-                Feld feld = new Feld(zeilen[y], spalten[x], quadrant);
-                zeilen[y].setFeld(x, feld);
-                spalten[x].setFeld(y, feld);
-                quadrant.setFeld(quadrantenPos, feld);
+                FieldGroup quadrant = getQuadrant(y, x);
+                int quadrantPos = ((y % 3) * 3) + (x % 3);
+                Field field = new Field(rows[y], columns[x], quadrant);
+                rows[y].setField(x, field);
+                columns[x].setField(y, field);
+                quadrant.setField(quadrantPos, field);
             }
         }
     }
 
     /**
-     * gibt das Sudoku aus
-     */
-    public void ausgeben(ISudokuAnzeige anzeige) {
-        anzeige.druckeSudoku(this);
-    }
-
-    /**
-     * Gibt an ob das Sudoku geloest ist
+     * Checks if the Sudoku is solved
      *
      * @return boolean
      */
-    public boolean isGeloest() {
-        for (Feldgruppe feldgruppe : zeilen) {
-            for (int x = 0; x < spalten.length; x++) {
-                if (feldgruppe.getFeld(x).getWert() == 0)
+    public boolean isSolved() {
+        for (FieldGroup fieldGroup : rows) {
+            for (int x = 0; x < columns.length; x++) {
+                if (fieldGroup.getField(x).getValue() == 0)
                     return false;
             }
         }
-
+        this.setState(SudokuState.SOLVED);
         return true;
     }
 
     /**
-     * Setzt den Wert in Speile und Zalte entsprechend und gibt zurück ob die Operation erfolgreich war
+     * Sets a value
      *
-     * @param zeile  int
-     * @param spalte int
-     * @param wert   int
-     * @return boolean
+     * @param row int
+     * @param column int
+     * @param value int
+     * @throws FieldFixedException            for fixed fields
+     * @throws ValueOutOfRangeException       for forbidden coordinates
+     * @throws RowOccupiedException           if the row is occupied
+     * @throws ColumnOccupiedException        if the column is occupied
+     * @throws QuadrantOccupiedException      if the quadrant is occupied
+     * @throws CoordinatesOutOfRangeException if the coordinates are not allowed
      */
-    public boolean setWert(int zeile, int spalte, int wert) throws UngueltigeKoordinatenException, WertInQuadrantVorhandenException, WertInSpalteVorhandenException, WertInZeileVorhandenException, WertebereichUngueltigException, FeldBelegtException {
-        if (istKoordinateGueltig(zeile - 1, spalte - 1)) {
-            return zeilen[zeile - 1].getFeld(spalte - 1).setWert(wert);
-        } else throw new UngueltigeKoordinatenException();
+    public void setValue(int row, int column, int value) throws CoordinatesOutOfRangeException, QuadrantOccupiedException, ColumnOccupiedException, RowOccupiedException, ValueOutOfRangeException, FieldFixedException {
+        if (isInRange(row - 1, column - 1)) {
+            rows[row - 1].getField(column - 1).setValue(value);
+        } else throw new CoordinatesOutOfRangeException();
     }
 
-    public boolean forceWert(int zeile, int spalte, int wert) {
-        if (istKoordinateGueltig(zeile - 1, spalte - 1))
-            return zeilen[zeile - 1].getFeld(spalte - 1).forceWert(wert);
+    public boolean forceValue(int row, int column, int value) {
+        if (isInRange(row - 1, column - 1))
+            return rows[row - 1].getField(column - 1).forceValue(value);
 
         return false;
     }
 
     /**
-     * Setzt den Wert in Speile und Zalte entsprechend und gibt zurück ob die Operation erfolgreich war<br>
-     * Darüber hinaus wird der Wert anschließend fixiert
+     * Sets a fixed value
      *
-     * @param zeile  int
-     * @param spalte int
-     * @param wert   int
-     * @return param
+     * @param row int
+     * @param column int
+     * @param value int
+     * @throws FieldFixedException            for fixed fields
+     * @throws ValueOutOfRangeException       for forbidden coordinates
+     * @throws RowOccupiedException           if the row is occupied
+     * @throws ColumnOccupiedException        if the column is occupied
+     * @throws QuadrantOccupiedException      if the quadrant is occupied
+     * @throws CoordinatesOutOfRangeException if the coordinates are not allowed
      */
-    public boolean setFixedValue(int zeile, int spalte, int wert) throws WertInQuadrantVorhandenException, WertInSpalteVorhandenException, WertInZeileVorhandenException, WertebereichUngueltigException, FeldBelegtException {
-        try {
-            boolean result = setWert(zeile, spalte, wert);
-            if (result)
-                zeilen[zeile - 1].getFeld(spalte - 1).setFixed(true);
-
-            return result;
-        } catch (UngueltigeKoordinatenException e) {
-            return false;
-        }
+    public void setFixedValue(int row, int column, int value) throws QuadrantOccupiedException, ColumnOccupiedException, RowOccupiedException, ValueOutOfRangeException, FieldFixedException, CoordinatesOutOfRangeException {
+        setValue(row, column, value);
+        rows[row - 1].getField(column - 1).setFixed(true);
     }
 
-    /**
-     * Setzt das Feld bei gültiger Koordinate auf Leer
-     *
-     * @param zeile  int
-     * @param spalte int
-     * @return boolean
-     */
-    public boolean setEmpty(int zeile, int spalte) {
-        if (istKoordinateGueltig(zeile, spalte)) {
-            zeilen[zeile].getFeld(spalte).reset();
+
+    public boolean setEmpty(int row, int column) {
+        if (isInRange(row, column)) {
+            rows[row].getField(column).reset();
             return true;
         }
         return false;
     }
 
     /**
-     * Gibt an ob die eingegeben Koordinaten im Sudoku liegen
-     *
-     * @param zeile  int
-     * @param spalte int
+     * @param row    int
+     * @param column int
      * @return boolean
      */
-    private boolean istKoordinateGueltig(int zeile, int spalte) {
-        return zeile >= 0 && zeile < 9 && spalte >= 0 && spalte < 9;
+    private boolean isInRange(int row, int column) {
+        return row >= 0 && row < 9 && column >= 0 && column < 9;
     }
 
-    /**
-     * Gibt den Zustand des Sudokus aus
-     *
-     * @return SudokuZustand
-     */
-    public SudokuZustand getZustand() {
-        return zustand;
+    public SudokuState getState() {
+        return state;
     }
 
-    /**
-     * Setzt den Zustand des Sudokus
-     *
-     * @param zustand SudokuZustand
-     */
-    public void setZustand(SudokuZustand zustand) {
-        this.zustand = zustand;
+    public void setState(SudokuState state) {
+        this.state = state;
     }
 
-    public Feldgruppe getQuadrant(int zeile, int spalte) {
-        return quadranten[((zeile / 3) * 3) + (spalte / 3)];
+    public FieldGroup getQuadrant(int row, int column) {
+        return quadrants[((row / 3) * 3) + (column / 3)];
     }
 
-    public Feld getFeld(int x, int y) {
-        return this.zeilen[y].getFeld(x);
+    public Field getField(int x, int y) {
+        return this.rows[y].getField(x);
     }
 
-    public void reset(){
+    public void reset() {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 this.setEmpty(i, j);
             }
+            this.setState(SudokuState.EMPTY);
         }
-        this.setZustand(SudokuZustand.GELADEN);
+        this.setState(SudokuState.LOADED);
     }
 }

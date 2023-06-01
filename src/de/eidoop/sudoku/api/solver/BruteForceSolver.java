@@ -1,29 +1,30 @@
-package de.eidoop.sudoku.api.loeser;
+package de.eidoop.sudoku.api.solver;
 
 import de.eidoop.sudoku.api.entities.Sudoku;
-import de.eidoop.sudoku.api.enums.SudokuZustand;
+import de.eidoop.sudoku.api.enums.SudokuState;
 
-public class ProbierSudoku extends Loeser {
+public class BruteForceSolver extends Solver {
 
     private final Sudoku sudoku;
-    public ProbierSudoku(Sudoku sudoku) {
+    public BruteForceSolver(Sudoku sudoku) {
         super(sudoku);
         this.sudoku = sudoku;
     }
 
     /**
-     * Löst das Sudoku durch BruteForce in statischer Reihenfolge
+     * Solves the Sudoku by BruteForce
      */
     @Override
-    public void loesen() {
+    public void solve() {
+        sudoku.setState(SudokuState.ATTEMPTING_SOLVE);
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < length; x++) {
-                sudoku.forceWert(y + 1, x + 1, 0);
+                sudoku.forceValue(y + 1, x + 1, 0);
             }
         }
         if(solveRecursive(0, sudoku)){
-            sudoku.setZustand(SudokuZustand.GELOEST);
-        }  else sudoku.setZustand(SudokuZustand.UNLOESBAR);
+            sudoku.setState(SudokuState.SOLVED);
+        }  else sudoku.setState(SudokuState.UNSOLVABLE);
     }
 
     private boolean solveRecursive(int fieldPos, Sudoku sudoku) {
@@ -33,12 +34,12 @@ public class ProbierSudoku extends Loeser {
         int row = fieldPos / 9;
         int column = fieldPos % 9;
 
-        if (sudoku.getFeld(column,row).getIsFixed())
+        if (sudoku.getField(column,row).getIsFixed())
             return solveRecursive(fieldPos + 1, sudoku);
 
         boolean isValueValid = false;
         for (int i = 1; i <= 9; i++) {
-            boolean result = sudoku.forceWert(row + 1, column + 1, i);
+            boolean result = sudoku.forceValue(row + 1, column + 1, i);
             if (result) {
                 isValueValid = solveRecursive(fieldPos + 1, sudoku);
                 if (isValueValid)
@@ -47,7 +48,7 @@ public class ProbierSudoku extends Loeser {
         }
 
         if (!isValueValid)
-            sudoku.forceWert(row + 1, column + 1, 0);
+            sudoku.forceValue(row + 1, column + 1, 0);
 
         return isValueValid;
     }

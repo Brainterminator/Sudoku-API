@@ -2,13 +2,10 @@ package de.eidoop.sudoku.api.util;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Diese Klasse verwaltet Zufallszahlen statisch,
- * die in Methoden verwendet werden
- */
-public class ZufallsGenerator {
+public class RandomGenerator {
+
     /**
-     *  Gibt eine zufällige ganze Zahl zwischen 1 und 9 zurück
+     * Returns a random number between 1 and 9
      * @return int
      */
     public static int randInt() {

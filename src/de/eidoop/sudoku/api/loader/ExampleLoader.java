@@ -1,19 +1,17 @@
-package de.eidoop.sudoku.api.lader;
+package de.eidoop.sudoku.api.loader;
 
 import de.eidoop.sudoku.api.entities.Sudoku;
-import de.eidoop.sudoku.api.enums.SudokuZustand;
+import de.eidoop.sudoku.api.enums.SudokuState;
 import de.eidoop.sudoku.api.exceptions.*;
 
-public class BeispielLader extends SudokuLader {
+public class ExampleLoader extends SudokuLoader {
 
     /**
-     * Gibt das eingegebene Sudoku geladen wieder zurück
-     *
+     * Loads the default example Sudoku
      * @param sudoku Sudoku
-     * @return Sudoku
      */
     @Override
-    public void ladeSudoku(Sudoku sudoku){
+    public void loadSudoku(Sudoku sudoku){
         sudoku.reset();
         try {
             sudoku.setFixedValue(1, 2, 3);
@@ -36,9 +34,9 @@ public class BeispielLader extends SudokuLader {
             sudoku.setFixedValue(8, 6, 9);
             sudoku.setFixedValue(8, 9, 5);
             sudoku.setFixedValue(9, 8, 7);
-            sudoku.setZustand(SudokuZustand.GELADEN);
-        } catch (WertInQuadrantVorhandenException | FeldBelegtException | WertebereichUngueltigException |
-                 WertInZeileVorhandenException | WertInSpalteVorhandenException e) {
+            sudoku.setState(SudokuState.LOADED);
+        } catch (QuadrantOccupiedException | FieldFixedException | ValueOutOfRangeException |
+                 RowOccupiedException | ColumnOccupiedException | CoordinatesOutOfRangeException e) {
             sudoku.reset();
         }
     }

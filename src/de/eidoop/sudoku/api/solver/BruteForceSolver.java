@@ -17,7 +17,7 @@ public class BruteForceSolver extends Solver {
      */
     @Override
     public void solve() {
-        sudoku.setState(SudokuState.ATTEMPTING_SOLVE);
+        sudoku.setState(SudokuState.SOLVING);
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < length; x++) {
                 sudoku.forceValue(y + 1, x + 1, 0);

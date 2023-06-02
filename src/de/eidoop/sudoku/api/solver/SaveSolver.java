@@ -20,7 +20,7 @@ public class SaveSolver extends Solver {
      */
     @Override
     public void solve() {
-        sudoku.setState(SudokuState.ATTEMPTING_SOLVE);
+        sudoku.setState(SudokuState.SOLVING);
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < length; x++) {
                 solveRecursive(y, x);
